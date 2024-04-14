@@ -1,0 +1,20 @@
+[
+    {
+        "id": "6e9aed0498f024a6",
+        "type": "rpi-dht22",
+        "z": "cc93b87dc741f921",
+        "name": "temp & humid",
+        "topic": "rpi-dht22",
+        "dht": "11",
+        "pintype": "0",
+        "pin": "14",
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "e5de0ee5d87e7a31",
+                "6a1c88113e85c7a7"
+            ]
+        ]
+    }
+]
