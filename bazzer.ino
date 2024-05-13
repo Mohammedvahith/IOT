@@ -1,4 +1,4 @@
-    int ultratrig=7;
+int ultratrig=7;
 int ultraecho=6;
 int sound=3;
 int led=11;
