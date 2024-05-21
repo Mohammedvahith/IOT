@@ -1,6 +1,6 @@
-const int IRout = 7;      // IR sensor output pin
-const int IRin = 6;       // IR sensor input pin
-const int buzzer = 3;     // Buzzer pin
+int IRout = 7;      // IR sensor output pin
+int IRin = 6;       // IR sensor input pin
+int buzzer = 3;     // Buzzer pin
 
 long duration;
 int distance;
