@@ -1,46 +1,59 @@
 import RPi.GPIO as GPIO
 import time
+
+# Set the GPIO mode to BOARD
 GPIO.setmode(GPIO.BOARD)
-TRIG=16
-ECHO=18
-i=0
-GPIO.setup(TRIG,GPIO.OUT)
-GPIO.setup(ECHO,GPIO.IN)
-GPIO.output(TRIG,GPIO.LOW)
 
-print("calibrating....")
+# Define the GPIO pins for the ultrasonic sensor
+TRIG = 16
+ECHO = 18
 
-time.sleep(2)
+# Variable to keep track of object state
+i = 0
 
-print(" Place the object")
+# Set up the GPIO pins
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+
+# Ensure the trigger pin is low initially
+GPIO.output(TRIG, GPIO.LOW)
+
+print("Calibrating....")
+time.sleep(2)  # Allow the sensor to settle
+print("Place the object")
 
 try:
-while True:
-GPIO.output(TRIG,GPIO.HIGH)
-time.sleep(0.00001)
-GPIO.output(TRIG,GPIO.LOW)
+    while True:
+        # Send a trigger pulse
+        GPIO.output(TRIG, GPIO.HIGH)
+        time.sleep(0.00001)  # Trigger pulse duration (10 microseconds)
+        GPIO.output(TRIG, GPIO.LOW)
 
-while GPIO.input(ECHO)==0:
-pulse_start=time.time()
+        # Wait for the echo to start
+        while GPIO.input(ECHO) == 0:
+            pulse_start = time.time()
 
-while GPIO.input(ECHO)==1:
-pulse_end=time.time()
+        # Wait for the echo to end
+        while GPIO.input(ECHO) == 1:
+            pulse_end = time.time()
 
-pulse_duration=pulse_end-pulse_start
+        # Calculate the pulse duration and distance
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 17150  # Calculate distance in cm
+        distance = round(distance + 1.15, 2)  # Add a slight offset and round the result
 
-distance=pulse_duration*17150
+        if 5 <= distance <= 30:  # Check if distance is within range
+            print("Distance:", distance, "cm")
+            print("Object is near")
+            i = 1  # Set the state indicating the object is near
 
-distance=round(distance+1.15,2)
-
-if distance<=30 and distance>=5:
-print("distance:",distance,"cm")
-print("Object is near")
-i=1
-
-if distance>30 and i==1:
-print("place the object...")
-i=0
-time.sleep(2)
+        if distance > 30 and i == 1:  # Check if the object has moved away
+            print("Place the object...")
+            i = 0  # Reset the state indicating the object is not near
+        
+        time.sleep(2)  # Delay between measurements
 
 except KeyboardInterrupt:
-GPIO.cleanup()
+    print("Measurement stopped by user")
+finally:
+    GPIO.cleanup()  # Clean up the GPIO pins
