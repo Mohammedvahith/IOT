@@ -1,8 +1,24 @@
 import sqlite3
-conn=sqlite3.connect('tempdatebase.db')
-cursor=conn.cursor()
-cursor.execute(''' CREATE TABLE TempData(Temperature FLOAT,Time FLOAT,Status VARCHAR(10))''')
-#cursor.execute('''INSERT INTO Tempdata(Temperature, Time, Status) VALUES (134, 12.18, 'High')''')
-conn.commit()
-print("Table is Created")
+
+# Connect to the SQLite database
+conn = sqlite3.connect('tempdatabase.db')
+
+# Create a cursor object to interact with the database
+cursor = conn.cursor()
+
+# Create the TempData table
+try:
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS TempData (
+        Temperature REAL,
+        Time REAL,
+        Status TEXT
+    )
+    ''')
+    conn.commit()
+    print("Table is Created")
+except sqlite3.Error as e:
+    print(f"An error occurred: {e}")
+
+# Close the connection
 conn.close()
