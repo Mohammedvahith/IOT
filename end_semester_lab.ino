@@ -13,6 +13,7 @@ void loop() {
   
   // Check if the IR sensor detects an obstacle
   if (irState == LOW) {
+    
     // Turn on the buzzer if obstacle detected
     digitalWrite(buzzerPin, HIGH);
   } else {
